@@ -1,0 +1,39 @@
+#!usr/bin/zsh
+
+# alias
+alias pg='brew services start postgresql@15'          #persist
+alias pgre='brew services restart postgresql@15' 
+alias pgstop='brew services stop postgresql@15'
+alias s3='sudo service sqlite3 start'
+
+# pkg managers
+export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+
+export PNPM_HOME="$XDG_DATA_HOME/pnpm"
+case ":$PATH:" in  *":$PNPM_HOME:"*) ;;
+*) export PATH="$PNPM_HOME:$PATH" ;; 
+esac
+
+export PATH="/usr/local/opt/curl/bin:$PATH"
+
+case ":${PATH}:" in *:"$HOME/.cargo/bin":*) ;; *) export PATH="$HOME/.cargo/bin:$PATH" ;; esac
+
+
+
+
+
+
+#-------------- OLD
+
+#export NVM_DIR="$XDG_CONFIG_HOME/nvm"
+#[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+# PATH
+#export PATH=/usr/local/bin:$PATH
+#export PATH="/opt/homebrew/bin:$PATH"
+#export PATH="/usr/local/sbin:$PATH"
+
+#PATH="/Library/Frameworks/Python.framework/Versions/3.11/bin:${PATH}"
+#export PATH
+
+#eval "$(/usr/local/bin/brew shellenv)"
