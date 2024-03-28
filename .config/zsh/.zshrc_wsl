@@ -1,19 +1,21 @@
-#!usr/bin/zsh
+#!/bin/zsh
+# Download Znap, if it's not there yet.
 
-# Get Znap
-[[ -r ~/zx/znap/znap.zsh ]] ||
+[[ -r "$ZDOTDIR/znap/znap.zsh" ]] ||
     git clone --depth 1 -- \
-        https://github.com/marlonrichert/zsh-snap.git ~/zx/znap
-source ~/zx/znap/znap.zsh  # Start Znap
+        https://github.com/marlonrichert/zsh-snap.git "$ZDOTDIR/znap"
+source "$ZDOTDIR/znap/znap.zsh"  # Start Znap
 
+#znap prompt sindresorhus/pure
 
-# Cache
-#zstyle ':completion:*' use-cache on
-#zstyle ':completion:*' cache-path "$XDG_CACHE_HOME/zsh/.zcompcache"
-
+# +------------+
+# | STARTUP |
+# +------------+
+fpath=($ZDOTDIR $fpath)
 #source $XDG_CONFIG_HOME/aliases/aliases
-
-# Behavior
+# +------------+
+# | NAVIGATION |
+# +------------+
 setopt AUTO_CD              # Go to folder path without using cd.
 setopt AUTO_PUSHD           # Push the old directory onto the stack on cd.
 setopt PUSHD_IGNORE_DUPS    # Do not store duplicates in the stack.
@@ -23,7 +25,11 @@ setopt CDABLE_VARS          # Change directory to a path stored in a variable.
 setopt EXTENDED_GLOB        # Use extended globbing syntax.
 #source $ZDOTDIR/bd.zsh
 
-# History
+#autoload -Uz bd; 
+
+# +---------+
+# | HISTORY |
+# +---------+
 setopt EXTENDED_HISTORY          # Write the history file in the ':start:elapsed;command' format.
 setopt SHARE_HISTORY             # Share history between all sessions.
 setopt HIST_EXPIRE_DUPS_FIRST    # Expire a duplicate event first when trimming history.
@@ -33,45 +39,6 @@ setopt HIST_FIND_NO_DUPS         # Do not display a previously found event.
 setopt HIST_IGNORE_SPACE         # Do not record an event starting with a space.
 setopt HIST_SAVE_NO_DUPS         # Do not write a duplicate event to the history file.
 setopt HIST_VERIFY               # Do not execute immediately upon history expansion.
-
-
-# AutoComplete
-ZSH_AUTOSUGGEST_STRATEGY=(history completion)
-znap source marlonrichert/zsh-autocomplete
-znap source zsh-users/zsh-autosuggestions
-[ -s "/home/sos/.bun/_bun" ] && source "/home/sos/.bun/_bun" # bun completions
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
-# Highlighting
-ZSH_HIGHLIGHT_HIGHLIGHTERS=( main brackets )
-znap source zsh-users/zsh-syntax-highlighting
-znap source zsh-users/zsh-history-substring-search
-bindkey '^[[A' history-substring-search-up
-bindkey '^[[B' history-substring-search-down
-zmodload zsh/zprof
-
-
-export OPENSSL="/home/linuxbrew/.linuxbrew/opt/openssl@3.1"
-export OPENSSL_DIR="/home/linuxbrew/.linuxbrew/opt/openssl@3.1"
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
-export PGDATA="$HOMEBREW_PREFIX/var/postgresql@15"
-
-export GOROOT=/usr/local/go
-export GOPATH=$HOME/go
-export PATH=$GOPATH/bin:$GOROOT/bin:$PATH
-#export PATH="/home/linuxbrew/.linuxbrew/opt/postgresql@15/bin:$PATH"
-export PATH="$HOMEBREW_CELLAR/postgresql@15/15.3_2/bin:$PATH"
-
-
-# Shell
-znap eval linuxbrew "/home/linuxbrew/.linuxbrew/bin/brew shellenv"
-znap eval oh-my-posh "oh-my-posh --init --shell zsh --config /home/sos/fullLife.json"
-
-
-
-#--------------------------------------------
-# Old Setup
 
 # +--------+
 # | COLORS |
@@ -85,7 +52,33 @@ znap eval oh-my-posh "oh-my-posh --init --shell zsh --config /home/sos/fullLife.
 # +-----------+
 # | PROFILING |
 # +-----------+
-# eval oh-my-posh "$(oh-my-posh --init --shell zsh --config /home/sos/fullLife.json)"
+
+
+# +------------+
+# | COMPLETION |
+# +------------+
+ZSH_AUTOSUGGEST_STRATEGY=(history completion)
+znap source marlonrichert/zsh-autocomplete
+znap source zsh-users/zsh-autosuggestions
+#znap source zsh-users/zsh-completions
+#fpath=($ZDOTDIR/zsh-completions/src $fpath)
+
+#source $ZDOTDIR/prezto_pruned_completion.zsh
+#source "/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc"
+#source "/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc"
+
+## source $ZDOTDIR/zsh-autosuggestions/zsh-autosuggestions.zsh [SWITCH TO ZNAP]
+
+# +---------------------+
+# | SYNTAX HIGHLIGHTING |
+# +---------------------+
+ZSH_HIGHLIGHT_HIGHLIGHTERS=( main brackets )
+znap source zsh-users/zsh-syntax-highlighting
+znap source zsh-users/zsh-history-substring-search
+
+bindkey '^[[A' history-substring-search-up
+bindkey '^[[B' history-substring-search-down
+zmodload zsh/zprof
 
 #source $ZDOTDIR/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh [SWITCH TO ZNAP]
 #source $ZDOTDIR/zsh-history-substring-search/zsh-history-substring-search.zsh [SWITCH TO ZNAP]
@@ -96,18 +89,33 @@ znap eval oh-my-posh "oh-my-posh --init --shell zsh --config /home/sos/fullLife.
 #  autoload -Uz compinit
 #  compinit
 #fi
-#znap source zsh-users/zsh-completions
-#fpath=($ZDOTDIR/zsh-completions/src $fpath)
 
+export PATH="$HOME/bin:$PATH"
 # tabtab source for packages
 # uninstall by removing these lines
 #[[ -f ~/.config/tabtab/zsh/__tabtab.zsh ]] && . ~/.config/tabtab/zsh/__tabtab.zsh || true
+znap eval oh-my-posh "oh-my-posh init zsh --config ~/para.json"
 
-#znap eval starship 'starship init zsh --print-full-init'
-#znap prompt
+#eval "$(oh-my-posh init zsh --config ~/para.json)"
+#eval "$(oh-my-posh init zsh --config ~/jandedobbeleer.omp.json)"
 
-#source $ZDOTDIR/prezto_pruned_completion.zsh
-#source "/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/path.zsh.inc"
-#source "/usr/local/Caskroom/google-cloud-sdk/latest/google-cloud-sdk/completion.zsh.inc"
 
-## source $ZDOTDIR/zsh-autosuggestions/zsh-autosuggestions.zsh [SWITCH TO ZNAP]
+# pnpm
+export PNPM_HOME="/home/vmp/.config/local/share/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
+
+# bun completions
+[ -s "/home/vmp/.bun/_bun" ] && source "/home/vmp/.bun/_bun"
+
+# Turso
+export PATH="/home/vmp/.turso:$PATH"
+. "$HOME/.cargo/env"
+
+PATH=~/.console-ninja/.bin:$PATH
+# bun
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
